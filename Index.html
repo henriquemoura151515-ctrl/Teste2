@@ -1,0 +1,589 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0d1b14">
+<title>A VOLTA POR CIMA | Estudos PMPE</title>
+<style>
+:root{
+  --bg:#080f0c; --panel:#111d17; --panel2:#172820; --line:#233c30; 
+  --gold:#d4af37; --text:#f1f5f2; --muted:#94a39b; --green:#529e75; --red:#d9776c;
+  --sidebar-width: 260px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at top, #102018 0%, var(--bg) 70%);color:var(--text);font:15vpx/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer;border:1px solid var(--line);border-radius:10px;padding:10px 14px;background:var(--panel2);color:var(--text);transition:all .2s ease}
+button:hover{border-color:var(--gold);transform:translateY(-1px)}
+button.primary{background:var(--gold);color:#0f1713;border-color:var(--gold);font-weight:700}
+button.primary:hover{background:#e0bf43}
+
+.app{display:grid;grid-template-columns:var(--sidebar-width) 1fr;min-height:100vh}
+aside{background:#0a1410;border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;z-index:10}
+.brand{padding:4px 8px 24px;border-bottom:1px solid var(--line);margin-bottom:16px}
+.brand small{color:var(--gold);letter-spacing:2px;font-weight:800;font-size:10px;display:block}
+.brand h1{font-size:20px;line-height:1.2;margin:6px 0 2px;letter-spacing:0.5px}
+.brand p{color:var(--muted);font-size:12px;margin:0}
+
+nav{display:flex;flex-direction:column;gap:4px}
+nav button{text-align:left;background:transparent;border-color:transparent;color:var(--muted);border-radius:8px;padding:10px 12px;font-size:14px;display:flex;align-items:center;gap:10px}
+nav button.active,nav button:hover{background:var(--panel2);color:var(--text);border-color:var(--line)}
+
+main{padding:32px;max-width:1400px;width:100%;margin:auto;display:flex;flex-direction:column;min-height:100vh}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:28px;flex-wrap:wrap}
+.top h2{margin:0;font-size:26px;letter-spacing:-0.5px}
+.top p{margin:4px 0 0;color:var(--muted);font-size:14px}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:18px}
+.card{background:linear-gradient(145deg,var(--panel),#0e1713);border:1px solid var(--line);border-radius:16px;padding:22px;min-width:0;box-shadow:0 4px 20px rgba(0,0,0,0.2)}
+.stat{grid-column:span 3}
+.wide{grid-column:span 8}
+.side{grid-column:span 4}
+.half{grid-column:span 6}
+.full{grid-column:1/-1}
+
+.label{color:var(--muted);font-size:13px}
+.number{font-size:30px;font-weight:800;margin:6px 0 2px}
+.gold{color:var(--gold)}
+h3{margin:0 0 14px;font-size:18px;letter-spacing:-0.3px}
+.muted{color:var(--muted)}
+
+.bar{height:10px;background:#1a2e24;border-radius:99px;overflow:hidden;margin:12px 0}
+.bar span{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--gold));width:0;transition:width .6s ease}
+
+.list{display:grid;gap:10px}
+.item{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.item:last-child{border:0}
+.item strong{display:block;font-size:14px}
+.item small{color:var(--muted)}
+
+.tag{font-size:11px;border:1px solid var(--line);padding:4px 10px;border-radius:99px;color:var(--muted);white-space:nowrap;background:var(--panel2)}
+input,textarea,select{width:100%;background:#0a120e;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:11px 14px;outline:none;transition:border-color .2s}
+input:focus,textarea:focus,select:focus{border-color:var(--gold)}
+textarea{min-height:120px;resize:vertical}
+label{display:block;color:var(--muted);font-size:13px;margin:12px 0 6px}
+.formrow{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.subject{display:flex;flex-direction:column;gap:12px}
+.subject select{margin-top:auto}
+
+.question{padding:18px;border:1px solid var(--line);border-radius:12px;margin:14px 0;background:rgba(23,40,32,0.4)}
+.option{display:block;text-align:left;width:100%;margin:8px 0;background:#0d1612;border:1px solid var(--line)}
+.option.chosen{border-color:var(--gold);background:var(--panel2)}
+.feedback{padding:14px;border-radius:10px;background:#172e23;margin-top:12px;border:1px solid var(--green)}
+
+.timer{font-size:52px;font-weight:800;letter-spacing:2px;text-align:center;margin:20px 0;font-variant-numeric:tabular-nums}
+.center{text-align:center}
+.notice{border-left:3px solid var(--gold);padding:12px 16px;background:#13221a;border-radius:0 10px 10px 0;color:#e2e8e4;font-size:13px;line-height:1.6}
+
+.mobile-toggle{display:none;background:none;border:none;color:var(--text);font-size:24px;padding:0}
+
+footer{margin-top:auto;padding-top:32px;color:var(--muted);font-size:12px;text-align:center}
+
+@media(max-width:900px){
+  .app{grid-template-columns:1fr}
+  aside{display:none;position:fixed;width:100%;height:100vh;z-index:100;background:var(--bg)}
+  aside.open{display:flex}
+  .mobile-toggle{display:block}
+  .stat{grid-column:span 6}
+  .wide,.side,.half{grid-column:1/-1}
+  main{padding:20px}
+}
+@media(max-width:480px){
+  .stat{grid-column:1/-1}
+  .formrow{grid-template-columns:1fr}
+  .timer{font-size:40px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside id="sidebar">
+    <div class="brand">
+      <small>PLATAFORMA DE ESTUDOS</small>
+      <h1>A VOLTA<br>POR CIMA</h1>
+      <p>Preparação PMPE • Soldado</p>
+    </div>
+    <nav id="nav">
+      <button class="active" data-page="inicio">⌂ Visão geral</button>
+      <button data-page="cronograma">▦ Cronograma</button>
+      <button data-page="materias">▤ Matérias</button>
+      <button data-page="questoes">✓ Questões</button>
+      <button data-page="erros">⚑ Caderno de erros</button>
+      <button data-page="revisoes">↻ Revisões</button>
+      <button data-page="ferramentas">◷ Ferramentas</button>
+      <button data-page="anotacoes">✎ Anotações</button>
+      <button data-page="desempenho">▥ Desempenho</button>
+      <button data-page="backup">⇧ Backup</button>
+    </nav>
+  </aside>
+  
+  <main>
+    <div class="top">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+        <div>
+          <h2 id="pageTitle">Visão geral</h2>
+          <p id="today"></p>
+        </div>
+      </div>
+      <div class="actions">
+        <button onclick="showPage('backup')">Backup</button>
+        <button class="primary" onclick="showPage('cronograma')">Estudar agora</button>
+      </div>
+    </div>
+    <div id="content"></div>
+    <footer>Feito para manter a constância. Um dia de cada vez. Rumo à aprovação na PMPE.</footer>
+  </main>
+</div>
+
+<script>
+const KEY = 'avolta_pmpe_v2';
+const initial = {
+ subjects: [
+   {name:'Língua Portuguesa',topics:['Compreensão e interpretação de textos','Informações explícitas e implícitas / inferência','Tema, assunto e ideia principal','Tese e argumentos','Fato e opinião','Coerência e coesão','Conectivos','Acentuação','Substantivo','Ortografia','Pronomes'],status:'Estudando'},
+   {name:'Raciocínio Lógico',topics:['Proposições simples e compostas','Conectivos lógicos','Tabela-verdade do conectivo E','Quantificadores lógicos','Diagramas lógicos'],status:'Estudando'},
+   {name:'Direito Constitucional',topics:['Constituição Federal: direitos e garantias fundamentais','Administração Pública: art. 37','Direitos do preso e dignidade da pessoa humana'],status:'Não iniciado'},
+   {name:'Direitos Humanos',topics:['Teoria Geral dos Direitos Humanos'],status:'Estudando'},
+   {name:'Informática',topics:['Internet, intranet e extranet','Navegadores','Endereço web','HTTP e HTTPS'],status:'Estudando'},
+   {name:'Legislação Penal Especial',topics:['Abuso de autoridade','Lei de Tortura'],status:'Estudando'},
+   {name:'Legislação Institucional PMPE',topics:['Conferir e cadastrar tópicos conforme edital oficial'],status:'Não iniciado'},
+   {name:'Direito Penal',topics:['Cadastrar tópicos conforme edital oficial'],status:'Não iniciado'},
+   {name:'Direito Processual Penal',topics:['Cadastrar tópicos conforme edital oficial'],status:'Não iniciado'},
+   {name:'Redação',topics:['Estrutura básica: introdução, desenvolvimento e conclusão','Conectivos: porém, portanto, além disso e assim'],status:'Estudando'}
+ ],
+ schedule: [
+   {day:'Segunda-feira',subject:'Língua Portuguesa',time:'19:00',done:false},
+   {day:'Terça-feira',subject:'Raciocínio Lógico',time:'19:00',done:false},
+   {day:'Quarta-feira',subject:'Direitos Humanos / Constitucional',time:'19:00',done:false},
+   {day:'Quinta-feira',subject:'Língua Portuguesa',time:'19:00',done:false},
+   {day:'Sexta-feira',subject:'Raciocínio Lógico',time:'19:00',done:false},
+   {day:'Sábado',subject:'Informática / Legislação',time:'15:00',done:false},
+   {day:'Domingo',subject:'Revisão e questões',time:'10:00',done:false}
+ ], 
+ notes: '', errors: [], revisions: [], sessions: 0, minutes: 0, answers: []
+};
+
+let data = load();
+function load(){
+  try{
+    let saved = JSON.parse(localStorage.getItem(KEY) || 'null');
+    return saved ? {...initial, ...saved} : structuredClone(initial);
+  }catch(e){ return structuredClone(initial); }
+}
+function save(){ localStorage.setItem(KEY, JSON.stringify(data)); }
+function esc(s){ return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])) }
+
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+function showPage(p){
+  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===p));
+  const names={
+    inicio:'Visão geral',cronograma:'Cronograma de estudos',materias:'Matérias e tópicos',
+    questoes:'Banco de questões',erros:'Caderno de erros',revisoes:'Revisões',
+    ferramentas:'Ferramentas de estudo',anotacoes:'Anotações',desempenho:'Desempenho',backup:'Backup e dados'
+  };
+  document.getElementById('pageTitle').textContent = names[p];
+  ({inicio:home,cronograma:schedule,materias:subjects,questoes:questions,erros:errors,revisoes:revisions,ferramentas:tools,anotacoes:notes,desempenho:performance,backup:backup}[p]||home)();
+  window.scrollTo(0,0);
+  if(window.innerWidth <= 900) document.getElementById('sidebar').classList.remove('open');
+}
+
+document.getElementById('nav').addEventListener('click',e=>{let b=e.target.closest('button[data-page]');if(b)showPage(b.dataset.page)});
+document.getElementById('today').textContent = new Intl.DateTimeFormat('pt-BR',{dateStyle:'full'}).format(new Date());
+
+function stats(){
+  let all = data.subjects.reduce((n,s)=>n+s.topics.length,0);
+  let done = data.subjects.reduce((n,s)=>n+(s.topicsDone?.length||0),0);
+  return {all, done, percent: all ? Math.round(done/all*100) : 0};
+}
+
+function home(){
+  let s = stats();
+  document.getElementById('content').innerHTML=`
+    <div class="grid">
+      <div class="card stat"><div class="label">Matérias cadastradas</div><div class="number">${data.subjects.length}</div><small class="muted">Disciplinas ativas</small></div>
+      <div class="card stat"><div class="label">Tópicos concluídos</div><div class="number">${s.done}</div><small class="muted">De ${s.all} tópicos</small></div>
+      <div class="card stat"><div class="label">Aproveitamento</div><div class="number">${accuracy()}%</div><small class="muted">Nas questões</small></div>
+      <div class="card stat"><div class="label">Tempo estudado</div><div class="number">${Math.floor(data.minutes/60)}h ${data.minutes%60}m</div><small class="muted">${data.sessions} sessões</small></div>
+      
+      <div class="card wide">
+        <h3>Progresso Geral do Edital</h3>
+        <div class="number gold">${s.percent}%</div>
+        <div class="bar"><span style="width:${s.percent}%"></span></div>
+        <p class="muted">Atualize seus tópicos concluídos diretamente na aba "Matérias".</p>
+      </div>
+      
+      <div class="card side">
+        <h3>Atalhos Rápidos</h3>
+        <div class="list">
+          <div class="item"><span>Ir para Matérias</span><button onclick="showPage('materias')">Abrir</button></div>
+          <div class="item"><span>Treinar Questões</span><button onclick="showPage('questoes')">Abrir</button></div>
+          <div class="item"><span>Cronômetro Pomodoro</span><button onclick="showPage('ferramentas')">Abrir</button></div>
+        </div>
+      </div>
+      
+      <div class="card full">
+        <h3>Plano Semanal</h3>
+        ${data.schedule.map((x,i)=>`
+          <div class="item">
+            <div><strong>${x.day}</strong><small>${esc(x.subject)} ${x.time?' • '+esc(x.time):''}</small></div>
+            <label style="margin:0; display:flex; align-items:center; gap:6px;">
+              <input type="checkbox" style="width:auto" ${x.done?'checked':''} onchange="toggleSchedule(${i},this.checked)"> Concluído
+            </label>
+          </div>
+        `).join('')}
+      </div>
+      
+      <div class="card full notice">
+        <strong>Aviso Importante:</strong> Esta plataforma foi estruturada para orientar o seu estudo diário para o concurso da PMPE. Valide sempre os tópicos perante o edital oficial vigente da banca organizadora para garantir cobertura total.
+      </div>
+    </div>`;
+}
+
+function toggleSchedule(i,v){ data.schedule[i].done=v; save(); }
+
+function schedule(){
+  document.getElementById('content').innerHTML=`
+    <div class="card">
+      <h3>Organize sua semana</h3>
+      <p class="muted">Personalize os dias, disciplinas e horários da sua rotina de estudos.</p>
+      ${data.schedule.map((x,i)=>`
+        <div class="formrow item" style="padding:15px 0">
+          <div><label>${x.day}</label><input value="${esc(x.subject)}" onchange="data.schedule[${i}].subject=this.value;save()"></div>
+          <div>
+            <label>Horário</label>
+            <input placeholder="Ex.: 19:00" value="${esc(x.time)}" onchange="data.schedule[${i}].time=this.value;save()">
+          </div>
+        </div>
+      `).join('')}
+      <button class="primary" style="margin-top:15px" onclick="save();alert('Cronograma salvo com sucesso!')">Salvar alterações</button>
+    </div>`;
+}
+
+function subjects(){
+  document.getElementById('content').innerHTML=`
+    <div class="grid">
+      ${data.subjects.map((s,i)=>`
+        <div class="card half subject">
+          <div>
+            <h3>${esc(s.name)}</h3>
+            <select onchange="data.subjects[${i}].status=this.value;save()">
+              ${['Não iniciado','Estudando','Concluído'].map(v=>`<option ${s.status===v?'selected':''}>${v}</option>`).join('')}
+            </select>
+          </div>
+          <div class="list" style="max-height:220px; overflow-y:auto; padding-right:4px;">
+            ${s.topics.map((t,j)=>`
+              <label class="item" style="cursor:pointer">
+                <span style="font-size:13px">${esc(t)}</span>
+                <input style="width:auto" type="checkbox" ${(s.topicsDone||[]).includes(j)?'checked':''} onchange="markTopic(${i},${j},this.checked)">
+              </label>
+            `).join('')}
+          </div>
+          <button onclick="addTopic(${i})">+ Adicionar tópico</button>
+        </div>
+      `).join('')}
+      
+      <div class="card full">
+        <h3>Cadastrar nova disciplina</h3>
+        <div class="formrow">
+          <input id="newSubject" placeholder="Ex.: Direito Administrativo">
+          <button class="primary" onclick="addSubject()">Adicionar Matéria</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function markTopic(i,j,v){
+  let a = data.subjects[i].topicsDone || [];
+  data.subjects[i].topicsDone = v ? [...new Set([...a,j])] : a.filter(x=>x!==j);
+  save();
+}
+
+function addTopic(i){
+  let t = prompt('Nome do novo tópico:');
+  if(t && t.trim()){
+    data.subjects[i].topics.push(t.trim());
+    save();
+    subjects();
+  }
+}
+
+function addSubject(){
+  let n = document.getElementById('newSubject').value.trim();
+  if(n){
+    data.subjects.push({name:n, topics:[], status:'Não iniciado'});
+    save();
+    subjects();
+  }
+}
+
+const bank=[
+  {subject:'Língua Portuguesa', q:'Em um texto dissertativo-argumentativo, a ideia principal corresponde:', opts:['A um detalhe isolado irrelevante.','À tese ou informação central defendida pelo autor.','Sempre à primeira linha do texto.','À opinião exclusiva do leitor.','A qualquer citação de autoridade.'], a:1, why:'A ideia principal/tese sintetiza o núcleo de argumentação e o ponto central defendido pelo autor.'},
+  {subject:'Raciocínio Lógico', q:'Na conjunção lógica (P ∧ Q), o resultado lógico é estritamente verdadeiro quando:', opts:['Apenas P é verdadeira.','P é falsa e Q é verdadeira.','Ambas as proposições (P e Q) forem verdadeiras.','Qualquer uma das proposições for verdadeira.','Ambas forem falsas.'], a:2, why:'A conjunção (conectivo E) exige que todos os componentes sejam verdadeiros para o resultado ser verdadeiro.'},
+  {subject:'Informática', q:'O protocolo HTTPS difere do HTTP tradicional principalmente por:', opts:['Exigir uma conexão de fibra óptica dedicada.','Utilizar criptografia para assegurar a segurança na transmissão de dados.','Garantir que o site visitado é 100% livre de vírus.','Aumentar a velocidade de download de arquivos.','Substituir o navegador web.'], a:1, why:'O HTTPS emprega camadas de criptografia (como TLS/SSL) para proteger os dados trafegados entre o navegador e o servidor.'},
+  {subject:'Direitos Humanos', q:'A dignidade da pessoa humana, fundamento da República Federativa do Brasil:', opts:['Pode ser suspensa em estado de sítio.','É um princípio aplicável apenas a cidadãos brasileiros natos.','Constitui um valor supremo que orienta todo o ordenamento jurídico e direitos fundamentais.','Aplica-se exclusivamente a pessoas livres de antecedentes criminais.','É um favor concedido pelo poder público.'], a:2, why:'A dignidade da pessoa humana é um princípio nuclear e vetor interpretativo de toda a ordem constitucional e de direitos humanos.'}
+];
+
+let qi = 0, selected = null, filterSubject = 'Todos';
+
+function questions(){
+  let filtered = filterSubject === 'Todos' ? bank : bank.filter(q=>q.subject === filterSubject);
+  if(filtered.length === 0){
+    document.getElementById('content').innerHTML = `<div class="card center"><h3>Nenhuma questão para esta matéria</h3><button onclick="filterSubject='Todos';questions()">Ver todas</button></div>`;
+    return;
+  }
+  let currentQIndex = qi % filtered.length;
+  let q = filtered[currentQIndex];
+  
+  let subjectsList = ['Todos', ...new Set(bank.map(x=>x.subject))];
+
+  document.getElementById('content').innerHTML=`
+    <div class="card">
+      <div class="top" style="margin-bottom:15px">
+        <div class="tabs" style="margin:0">
+          <span class="tag">${q.subject}</span>
+          <span class="tag">Treino • Questão ${currentQIndex+1} de ${filtered.length}</span>
+        </div>
+        <div>
+          <label style="display:inline; margin-right:8px; font-size:12px">Filtrar:</label>
+          <select style="display:inline-block; width:auto; padding:4px 8px; font-size:13px" onchange="filterSubject=this.value;qi=0;selected=null;questions()">
+            ${subjectsList.map(s=>`<option ${filterSubject===s?'selected':''}>${s}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+      
+      <h3 style="font-size:17px; line-height:1.4">${q.q}</h3>
+      
+      ${q.opts.map((o,i)=>`
+        <button class="option ${selected===i?'chosen':''}" onclick="selected=${i};questions()">
+          <b>${'ABCDE'[i]})</b> ${o}
+        </button>
+      `).join('')}
+      
+      <div class="actions" style="margin-top:16px">
+        <button class="primary" onclick="answerQuestion('${q.subject}', ${q.a}, ${JSON.stringify(q)})">Responder</button>
+        <button onclick="qi++;selected=null;questions()">Pular questão</button>
+      </div>
+      
+      <div id="feedback"></div>
+      <p class="notice" style="margin-top:16px">Banco demonstrativo integrado. Você pode expandir seus estudos respondendo provas anteriores da banca organizadora.</p>
+    </div>`;
+}
+
+function answerQuestion(sub, correctIndex, qObj){
+  if(selected === null){ alert('Selecione uma alternativa antes de responder.'); return; }
+  let ok = (selected === correctIndex);
+  data.answers.push({subject: sub, ok});
+  if(!ok){
+    data.errors.push({q: qObj.q, chosen:'ABCDE'[selected], correct:'ABCDE'[correctIndex], why:qObj.why});
+  }
+  save();
+  
+  document.getElementById('feedback').innerHTML=`
+    <div class="feedback">
+      <strong style="color:${ok?'var(--green)':'var(--red)'}">${ok?'✓ Resposta Correta!':'✗ Resposta Incorreta.'}</strong>
+      <p style="margin:6px 0">Gabarito: <b>${'ABCDE'[correctIndex]}</b>. ${qObj.why}</p>
+      <button class="primary" onclick="qi++;selected=null;questions()">Próxima questão ➔</button>
+    </div>`;
+}
+
+function errors(){
+  document.getElementById('content').innerHTML=`
+    <div class="card">
+      <h3>Caderno de Erros</h3>
+      <p class="muted">Questões que você errou nos treinos para revisão direcionada.</p>
+      ${data.errors.length ? data.errors.map((e,i)=>`
+        <div class="question">
+          <strong>${esc(e.q)}</strong>
+          <p class="muted" style="margin:6px 0">Sua resposta: <span style="color:var(--red)">${e.chosen}</span> • Gabarito correto: <span style="color:var(--green)">${e.correct}</span></p>
+          <p style="font-size:13px">${esc(e.why)}</p>
+          <button style="margin-top:8px" onclick="data.errors.splice(${i},1);save();errors()">Remover do caderno</button>
+        </div>
+      `).join('') : '<p class="muted" style="margin-top:20px">Nenhum erro registrado até o momento. Continue praticando!</p>'}
+    </div>`;
+}
+
+function revisions(){
+  document.getElementById('content').innerHTML=`
+    <div class="card">
+      <h3>Agenda de Revisões</h3>
+      <p class="muted">Controle o seu ciclo de revisões espaçadas.</p>
+      <div class="formrow">
+        <div><label>Conteúdo / Matéria</label><input id="revTopic" placeholder="Ex.: Acentuação Gráfica"></div>
+        <div><label>Data para revisão</label><input id="revDate" type="date"></div>
+      </div>
+      <button class="primary" style="margin-top:14px" onclick="addRevision()">Adicionar Revisão</button>
+      
+      <div class="list" style="margin-top:20px">
+        ${data.revisions.length ? data.revisions.map((r,i)=>`
+          <div class="item">
+            <div><strong>${esc(r.topic)}</strong><small>Data: ${esc(r.date||'Não informada')}</small></div>
+            <button onclick="data.revisions.splice(${i},1);save();revisions()">Concluir</button>
+          </div>
+        `).join('') : '<p class="muted">Nenhuma revisão pendente agendada.</p>'}
+      </div>
+      <p class="notice" style="margin-top:20px">Dica de ouro: Revise os conteúdos estudados em prazos estratégicos (ex: 24 horas, 7 dias e 30 dias).</p>
+    </div>`;
+}
+
+function addRevision(){
+  let t = document.getElementById('revTopic').value.trim();
+  let d = document.getElementById('revDate').value;
+  if(t){
+    data.revisions.push({topic:t, date:d});
+    save();
+    revisions();
+  }
+}
+
+let timer = null, remaining = 25*60;
+
+function tools(){
+  document.getElementById('content').innerHTML=`
+    <div class="grid">
+      <div class="card half center">
+        <h3>Cronômetro Pomodoro</h3>
+        <div class="timer" id="clock">${fmt(remaining)}</div>
+        <div class="actions" style="justify-content:center">
+          <button class="primary" onclick="startTimer()">Iniciar</button>
+          <button onclick="pauseTimer()">Pausar</button>
+          <button onclick="resetTimer()">Zerár</button>
+        </div>
+        <p class="muted" style="margin-top:14px">Foco total de 25 minutos por sessão.</p>
+      </div>
+      
+      <div class="card half">
+        <h3>Registro Manual de Estudos</h3>
+        <label>Minutos estudados</label>
+        <input id="mins" type="number" min="1" value="25">
+        <button class="primary" style="margin-top:14px" onclick="logStudy()">Registrar Sessão</button>
+        <div class="notice" style="margin-top:16px">
+          <b>Resumo do seu histórico:</b><br>
+          ${data.sessions} sessões concluídas • ${data.minutes} minutos dedicados (${Math.floor(data.minutes/60)}h).
+        </div>
+      </div>
+    </div>`;
+}
+
+function fmt(n){ return String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0'); }
+
+function startTimer(){
+  if(timer) return;
+  timer = setInterval(()=>{
+    remaining = Math.max(0, remaining - 1);
+    let el = document.getElementById('clock');
+    if(el) el.textContent = fmt(remaining);
+    if(remaining === 0){
+      pauseTimer();
+      alert('Pomodoro concluído com sucesso! Excelente foco.');
+      data.sessions++;
+      data.minutes += 25;
+      save();
+    }
+  }, 1000);
+}
+
+function pauseTimer(){ clearInterval(timer); timer = null; }
+function resetTimer(){ pauseTimer(); remaining = 25*60; let el = document.getElementById('clock'); if(el) el.textContent = fmt(remaining); }
+
+function logStudy(){
+  let n = Number(document.getElementById('mins').value);
+  if(n > 0){
+    data.sessions++;
+    data.minutes += n;
+    save();
+    tools();
+    alert('Sessão registrada com sucesso!');
+  }
+}
+
+function notes(){
+  document.getElementById('content').innerHTML=`
+    <div class="card">
+      <h3>Caderno de Anotações</h3>
+      <p class="muted">Anote fórmulas, resumos rápidos, bizus ou lembretes importantes.</p>
+      <textarea id="notesText" placeholder="Escreva suas anotações aqui...">${esc(data.notes)}</textarea>
+      <button class="primary" style="margin-top:14px" onclick="data.notes=document.getElementById('notesText').value;save();alert('Anotações salvas com sucesso!')">Salvar Anotações</button>
+    </div>`;
+}
+
+function accuracy(){
+  return data.answers.length ? Math.round(data.answers.filter(x=>x.ok).length / data.answers.length * 100) : 0;
+}
+
+function performance(){
+  let good = data.answers.filter(x=>x.ok).length;
+  let total = data.answers.length;
+  document.getElementById('content').innerHTML=`
+    <div class="grid">
+      <div class="card stat"><div class="label">Questões respondidas</div><div class="number">${total}</div></div>
+      <div class="card stat"><div class="label">Acertos</div><div class="number" style="color:var(--green)">${good}</div></div>
+      <div class="card stat"><div class="label">Erros</div><div class="number" style="color:var(--red)">${total - good}</div></div>
+      <div class="card stat"><div class="label">Aproveitamento</div><div class="number gold">${accuracy()}%</div></div>
+      
+      <div class="card full">
+        <h3>Desempenho Geral</h3>
+        <div class="bar"><span style="width:${accuracy()}%"></span></div>
+        <p class="muted">O percentual é calculado com base nas respostas registradas na aba de questões do site.</p>
+      </div>
+    </div>`;
+}
+
+function backup(){
+  document.getElementById('content').innerHTML=`
+    <div class="grid">
+      <div class="card half">
+        <h3>Exportar Seus Dados</h3>
+        <p class="muted">Baixe um arquivo JSON contendo seu progresso, cronograma, caderno de erros e anotações.</p>
+        <button class="primary" style="margin-top:12px" onclick="exportData()">Baixar Backup</button>
+      </div>
+      
+      <div class="card half">
+        <h3>Importar Backup</h3>
+        <p class="muted">Carregue um arquivo de backup prévio para restaurar suas informações.</p>
+        <input type="file" id="backupFile" accept=".json,application/json" style="margin-bottom:12px">
+        <button onclick="importData()">Restaurar Dados</button>
+      </div>
+      
+      <div class="card full notice">
+        <b>Segurança dos Dados:</b> Seus dados ficam salvos de forma segura e privada diretamente no armazenamento local do seu navegador ou dispositivo. Faça backups periódicos para evitar perdas caso limpe os dados do navegador.
+      </div>
+    </div>`;
+}
+
+function exportData(){
+  let blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  let a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'backup-a-volta-por-cima-pmpe.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function importData(){
+  let f = document.getElementById('backupFile').files[0];
+  if(!f) return alert('Selecione um arquivo JSON válido.');
+  let r = new FileReader();
+  r.onload = ()=>{
+    try{
+      let x = JSON.parse(r.result);
+      if(!x.subjects || !x.schedule) throw Error();
+      data = {...initial, ...x};
+      save();
+      alert('Backup importado com sucesso!');
+      showPage('inicio');
+    }catch(e){
+      alert('Erro ao importar: arquivo inválido ou incompatível.');
+    }
+  };
+  r.readAsText(f);
+}
+
+showPage('inicio');
+</script>
+</body>
+</html>
